@@ -1,6 +1,7 @@
 import socket
 import hashlib
 import threading
+
 global finish
 global text
 import Performance
@@ -20,7 +21,7 @@ class patz:
 
     def catfish(self):
         self.soc = socket.socket()
-        self.soc.bind(("0.0.0.0",13370+int(self.socket_id)))
+        self.soc.bind(("0.0.0.0", 13370 + int(self.socket_id)))
         self.soc.listen()
         (self.client_socket, self.client_address) = self.soc.accept()
         self.data = self.client_socket.recv(1024).decode()
@@ -60,10 +61,12 @@ class patz:
     def allop(self):
         print('start search: ' + self.start + ' to ' + self.stop)
         if self.strtomd5(self.start) == self.md5:
-                self.send_pass(self.start)
+            self.send_pass(self.start)
         for i in range(8):
-            self.generator(self.start, 7 - i, self.stop)
-    
+            t = threading.Thread(target=self.generator, args=(self.start, 7 - i, self.stop))
+            self.threads.append(t)
+            t.start()
+
     def send_pass(self, s):
         self.client_socket.send((self.socket_id + ',true,' + self.md5 + ',' + s).encode())
         print('found: ' + self.start + ' to ' + self.stop)
@@ -91,7 +94,6 @@ class patz:
             c2 = ord(self.stop[-(x + 1)]) - 96
             sum += (c2 - c1) * (26 ** x)
         return sum
-
 
 
 def main():

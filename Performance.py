@@ -2,14 +2,14 @@ import pygame
 import random
 import threading
 import time
-from function_sound_file import function_sound
+from playsound import playsound
 
 global done
 window_x = 300
 window_y = 200
 
 def performance():
-    function_sound()
+    playsound('elMatadoor.mp3')
 
 def getRandColor():
     colorR = random.randint(0,255)
